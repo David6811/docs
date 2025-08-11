@@ -87,10 +87,13 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
 
     switch (fileType) {
       case 'html':
+        const htmlSrc = process.env.NODE_ENV === 'development' 
+          ? `http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`
+          : `${process.env.PUBLIC_URL}/files/${filePath}`;
         return (
           <Box sx={{ height: '100%', width: '100%' }}>
             <iframe
-              src={`http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`}
+              src={htmlSrc}
               style={{ width: '100%', height: '100%', border: 'none' }}
               title="HTML Content"
             />
@@ -98,10 +101,13 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
         );
 
       case 'image':
+        const imageSrc = process.env.NODE_ENV === 'development' 
+          ? `http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`
+          : `${process.env.PUBLIC_URL}/files/${filePath}`;
         return (
           <Box display="flex" justifyContent="center" alignItems="center" sx={{ p: 2 }}>
             <img
-              src={`http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`}
+              src={imageSrc}
               alt="File content"
               style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
             />
@@ -109,10 +115,13 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
         );
 
       case 'pdf':
+        const pdfSrc = process.env.NODE_ENV === 'development' 
+          ? `http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`
+          : `${process.env.PUBLIC_URL}/files/${filePath}`;
         return (
           <Box sx={{ height: '100%', width: '100%' }}>
             <iframe
-              src={`http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`}
+              src={pdfSrc}
               style={{ width: '100%', height: '100%', border: 'none' }}
               title="PDF Content"
             />
