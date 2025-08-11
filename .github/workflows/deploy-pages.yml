@@ -40,6 +40,15 @@ jobs:
         cd file-viewer
         npm run build
         
+    - name: Verify build output
+      run: |
+        echo "Build directory contents:"
+        ls -la file-viewer/build/
+        echo "API files:"
+        ls -la file-viewer/build/api/ || echo "No api directory"
+        echo "Static files:"
+        ls -la file-viewer/build/files/ || echo "No files directory"
+        
     - name: Setup Pages
       uses: actions/configure-pages@v5
       
