@@ -1,8 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 
-// Base path for docs directory - use current working directory in GitHub Actions
-const DOCS_PATH = process.env.GITHUB_ACTIONS ? process.cwd() : '/Users/weixu/docs';
+// Base path for docs directory - detect based on current working directory
+let DOCS_PATH;
+if (process.cwd().endsWith('file-viewer')) {
+  // Script runs from file-viewer directory (both local and GitHub Actions)
+  DOCS_PATH = path.join(process.cwd(), '..');
+} else {
+  // Script runs from docs directory
+  DOCS_PATH = process.cwd();
+}
 // When script runs from file-viewer dir, use ./public, otherwise ./file-viewer/public
 const OUTPUT_PATH = process.cwd().endsWith('file-viewer') ? './public/api' : './file-viewer/public/api';
 
