@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-// Base path for docs directory
-const DOCS_PATH = '/Users/weixu/docs';
+// Base path for docs directory - use current working directory in GitHub Actions
+const DOCS_PATH = process.env.GITHUB_ACTIONS ? process.cwd() : '/Users/weixu/docs';
 const OUTPUT_PATH = './file-viewer/public/api';
 
 // Recursively scan directory and build file tree
