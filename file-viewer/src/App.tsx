@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ThemeProvider,
   createTheme,
@@ -67,6 +67,42 @@ function App() {
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
+  // Auto-select HTML file on load in production
+  useEffect(() => {
+    if (process.env.NODE_ENV !== 'development') {
+      // Look for HTML files in the static data
+      const findHtmlFile = async () => {
+        try {
+          const response = await fetch(`${process.env.PUBLIC_URL}/api/files.json`);
+          const files = await response.json();
+          
+          // Find the first HTML file
+          const findHtml = (items: any[]): any => {
+            for (const item of items) {
+              if (item.isDirectory && item.children) {
+                const found = findHtml(item.children);
+                if (found) return found;
+              } else if (item.name.toLowerCase().endsWith('.html')) {
+                return item;
+              }
+            }
+            return null;
+          };
+          
+          const htmlFile = findHtml(files);
+          if (htmlFile) {
+            setSelectedFile(htmlFile.path);
+            setSelectedFileType('html' as FileType);
+          }
+        } catch (error) {
+          console.error('Error finding HTML file:', error);
+        }
+      };
+      
+      findHtmlFile();
+    }
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>

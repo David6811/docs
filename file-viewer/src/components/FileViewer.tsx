@@ -129,6 +129,23 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
         );
 
       case 'text':
+        const textSrc = process.env.NODE_ENV === 'development' 
+          ? content
+          : `${process.env.PUBLIC_URL}/files/${filePath}`;
+        
+        if (process.env.NODE_ENV !== 'development') {
+          // In production, show text files in iframe
+          return (
+            <Box sx={{ height: '100%', width: '100%' }}>
+              <iframe
+                src={textSrc}
+                style={{ width: '100%', height: '100%', border: 'none' }}
+                title="Text Content"
+              />
+            </Box>
+          );
+        }
+        
         return (
           <Box sx={{ p: 2 }}>
             <pre style={{ whiteSpace: 'pre-wrap', fontSize: '14px' }}>
@@ -148,7 +165,9 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
 
   const handleOpenInNewWindow = () => {
     if (filePath) {
-      const url = `http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`;
+      const url = process.env.NODE_ENV === 'development'
+        ? `http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`
+        : `${process.env.PUBLIC_URL}/files/${filePath}`;
       window.open(url, '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
     }
   };
