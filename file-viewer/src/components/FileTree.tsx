@@ -68,7 +68,9 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
 
   const handleOpenInNewWindow = (event: React.MouseEvent, filePath: string) => {
     event.stopPropagation();
-    const url = `http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`;
+    const url = process.env.NODE_ENV === 'development'
+      ? `http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`
+      : `${process.env.PUBLIC_URL}/files/${filePath}`;
     window.open(url, '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
   };
 

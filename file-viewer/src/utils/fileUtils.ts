@@ -30,6 +30,14 @@ export const getFileType = (filename: string): FileType => {
 
 export const buildFileTree = async (basePath: string): Promise<FileNode[]> => {
   try {
+    // Try to fetch from static files first (for GitHub Pages)
+    const staticResponse = await fetch(`${process.env.PUBLIC_URL}/api/files.json`);
+    if (staticResponse.ok) {
+      const data = await staticResponse.json();
+      return data;
+    }
+    
+    // Fallback to local development API
     const response = await fetch('http://localhost:3001/api/files');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
