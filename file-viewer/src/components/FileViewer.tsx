@@ -224,12 +224,12 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
     }
   };
 
-  const getFileTypeColor = (type: FileType | null) => {
+  const getFileTypeColor = (type: FileType | null): 'default' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning' => {
     switch (type) {
       case 'html': return 'warning';
       case 'pdf': return 'error';
       case 'image': return 'success';
-      case 'text': return 'info';
+      case 'text': return 'primary';
       default: return 'default';
     }
   };
@@ -255,7 +255,7 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          backgroundColor: '#f8f9fa',
+          backgroundColor: (theme) => theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#f8f9fa',
           minHeight: window.innerWidth <= 768 ? '48px' : '56px',
         }}>
           <Box sx={{ minWidth: 0, flex: 1 }}>
@@ -269,10 +269,30 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
                   size="small"
                   color={getFileTypeColor(fileType)}
                   variant="outlined"
-                  sx={{ fontSize: '0.7rem', height: '20px' }}
+                  sx={{ 
+                    fontSize: '0.7rem', 
+                    height: '20px',
+                    '& .MuiChip-label': {
+                      color: 'text.primary',
+                      fontWeight: 500,
+                    },
+                    borderColor: (theme) => theme.palette.mode === 'dark' 
+                      ? theme.palette.primary.main 
+                      : 'currentColor',
+                    backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                      ? 'rgba(99, 102, 241, 0.1)' 
+                      : 'transparent',
+                  }}
                 />
               )}
-              <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
+              <Typography 
+                variant="caption" 
+                sx={{ 
+                  fontSize: '0.7rem',
+                  color: 'text.secondary',
+                  opacity: 0.8,
+                }}
+              >
                 {filePath}
               </Typography>
             </Box>
