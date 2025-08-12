@@ -67,19 +67,18 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
   const [deleteMode, setDeleteMode] = useState<'delete' | 'move'>('delete');
   const [availableFolders, setAvailableFolders] = useState<AvailableFolder[]>([]);
   const [selectedDestination, setSelectedDestination] = useState<string>('');
+  
+  // Check if backend features are available (only in localhost development)
+  const isBackendAvailable = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
   // Load folder contents and available folders when dialog opens for directories
   React.useEffect(() => {
-    if (open && isDirectory && filePath) {
+    if (open && isDirectory && filePath && isBackendAvailable) {
       const loadData = async () => {
         setLoadingContents(true);
         try {
-          const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-          
           // Load folder contents
-          const contentsUrl = isLocalhost 
-            ? `http://localhost:3001/api/folder-contents?folderPath=${encodeURIComponent(filePath)}`
-            : `/api/folder-contents?folderPath=${encodeURIComponent(filePath)}`;
+          const contentsUrl = `http://localhost:3001/api/folder-contents?folderPath=${encodeURIComponent(filePath)}`;
           
           const contentsResponse = await fetch(contentsUrl);
           if (contentsResponse.ok) {
@@ -91,9 +90,7 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
           }
           
           // Load available folders for move destination
-          const foldersUrl = isLocalhost 
-            ? 'http://localhost:3001/api/folders'
-            : '/api/folders';
+          const foldersUrl = 'http://localhost:3001/api/folders';
           
           const foldersResponse = await fetch(foldersUrl);
           if (foldersResponse.ok) {
@@ -114,7 +111,7 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
       setFolderContents(null);
       setAvailableFolders([]);
     }
-  }, [open, isDirectory, filePath]);
+  }, [open, isDirectory, filePath, isBackendAvailable]);
 
   const handleDelete = async () => {
     if (!password.trim()) {
@@ -134,10 +131,9 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
     setError('');
 
     try {
-      if (deleteMode === 'move' && isDirectory) {
+      if (deleteMode === 'move' && isDirectory && isBackendAvailable) {
         // Call move API instead of delete
-        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const apiUrl = isLocalhost ? 'http://localhost:3001/api/move-folder-contents' : '/api/move-folder-contents';
+        const apiUrl = 'http://localhost:3001/api/move-folder-contents';
         
         const response = await fetch(apiUrl, {
           method: 'POST',
@@ -162,9 +158,11 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
         if (onMoveSuccess) {
           onMoveSuccess();
         }
-      } else {
-        // Normal delete operation
+      } else if (isBackendAvailable) {
+        // Normal delete operation (only in development)
         await onConfirm(password);
+      } else {
+        throw new Error('Delete functionality is not available in production');
       }
       
       handleClose();
@@ -193,6 +191,11 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
       handleDelete();
     }
   };
+
+  // Don't render the dialog if backend is not available
+  if (!isBackendAvailable) {
+    return null;
+  }
 
   return (
     <Dialog

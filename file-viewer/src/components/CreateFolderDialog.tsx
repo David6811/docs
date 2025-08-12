@@ -32,6 +32,9 @@ const CreateFolderDialog: React.FC<CreateFolderDialogProps> = ({
   const [folderName, setFolderName] = useState('');
   const [error, setError] = useState('');
   const [creating, setCreating] = useState(false);
+  
+  // Check if backend features are available (only in localhost development)
+  const isBackendAvailable = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
   const handleCreate = async () => {
     const trimmedName = folderName.trim();
@@ -57,6 +60,9 @@ const CreateFolderDialog: React.FC<CreateFolderDialogProps> = ({
     setError('');
 
     try {
+      if (!isBackendAvailable) {
+        throw new Error('Create folder functionality is not available in production');
+      }
       await onConfirm(trimmedName);
       handleClose();
     } catch (err) {
@@ -78,6 +84,11 @@ const CreateFolderDialog: React.FC<CreateFolderDialogProps> = ({
       handleCreate();
     }
   };
+
+  // Don't render the dialog if backend is not available
+  if (!isBackendAvailable) {
+    return null;
+  }
 
   return (
     <Dialog

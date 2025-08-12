@@ -30,6 +30,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUploadSuccess, onClose, targe
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Check if backend features are available (only in localhost development)
+  const isBackendAvailable = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -55,6 +58,11 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUploadSuccess, onClose, targe
 
   const handleUpload = async () => {
     if (!selectedFile) return;
+    
+    if (!isBackendAvailable) {
+      setError('Upload functionality is not available in production');
+      return;
+    }
 
     setUploading(true);
     setError('');
@@ -68,8 +76,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUploadSuccess, onClose, targe
         formData.append('targetFolder', targetFolder);
       }
 
-      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      const apiUrl = isLocalhost ? 'http://localhost:3001/api/upload' : '/api/upload';
+      const apiUrl = 'http://localhost:3001/api/upload';
       
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -116,6 +123,26 @@ const FileUpload: React.FC<FileUploadProps> = ({ onUploadSuccess, onClose, targe
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
+
+  // Don't render the upload component if backend is not available
+  if (!isBackendAvailable) {
+    return (
+      <Paper
+        elevation={0}
+        sx={{
+          p: 2,
+          borderRadius: 1,
+          border: '2px dashed',
+          borderColor: 'divider',
+          backgroundColor: 'background.paper',
+        }}
+      >
+        <Alert severity="info">
+          Upload functionality is only available in development mode.
+        </Alert>
+      </Paper>
+    );
+  }
 
   return (
     <Paper 

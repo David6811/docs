@@ -42,6 +42,9 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
   const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; file: FileNode | null }>({ open: false, file: null });
   const [createFolderDialog, setCreateFolderDialog] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  
+  // Check if backend features are available (only in localhost development)
+  const isBackendAvailable = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
   const loadFileTree = async () => {
     setLoading(true);
@@ -219,25 +222,27 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
                   </IconButton>
                 </Tooltip>
               )}
-              <Tooltip title={node.isDirectory ? "Delete folder" : "Delete file"} arrow>
-                <IconButton
-                  size="small"
-                  onClick={(event) => handleDeleteClick(event, node)}
-                  sx={{
-                    opacity: 0.6,
-                    '&:hover': {
-                      opacity: 1,
-                      backgroundColor: 'rgba(244, 67, 54, 0.1)',
-                      color: 'error.main',
-                    },
-                    padding: '2px',
-                    minWidth: '20px',
-                    height: '20px',
-                  }}
-                >
-                  <Delete sx={{ fontSize: '14px' }} />
-                </IconButton>
-              </Tooltip>
+              {isBackendAvailable && (
+                <Tooltip title={node.isDirectory ? "Delete folder" : "Delete file"} arrow>
+                  <IconButton
+                    size="small"
+                    onClick={(event) => handleDeleteClick(event, node)}
+                    sx={{
+                      opacity: 0.6,
+                      '&:hover': {
+                        opacity: 1,
+                        backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                        color: 'error.main',
+                      },
+                      padding: '2px',
+                      minWidth: '20px',
+                      height: '20px',
+                    }}
+                  >
+                    <Delete sx={{ fontSize: '14px' }} />
+                  </IconButton>
+                </Tooltip>
+              )}
             </Box>
           </Box>
         }
@@ -320,45 +325,51 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
               <Refresh sx={{ fontSize: '18px' }} />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Create folder" arrow>
-            <IconButton
-              size="small"
-              onClick={() => setCreateFolderDialog(true)}
-              sx={{
-                '&:hover': {
-                  backgroundColor: 'action.hover',
-                },
-              }}
-            >
-              <CreateNewFolder sx={{ fontSize: '18px' }} />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Upload file" arrow>
-            <IconButton
-              size="small"
-              onClick={() => setShowUpload(!showUpload)}
-              sx={{
-                '&:hover': {
-                  backgroundColor: 'action.hover',
-                },
-                color: showUpload ? 'primary.main' : 'inherit',
-              }}
-            >
-              {showUpload ? <ExpandLess sx={{ fontSize: '18px' }} /> : <CloudUpload sx={{ fontSize: '18px' }} />}
-            </IconButton>
-          </Tooltip>
+          {isBackendAvailable && (
+            <>
+              <Tooltip title="Create folder" arrow>
+                <IconButton
+                  size="small"
+                  onClick={() => setCreateFolderDialog(true)}
+                  sx={{
+                    '&:hover': {
+                      backgroundColor: 'action.hover',
+                    },
+                  }}
+                >
+                  <CreateNewFolder sx={{ fontSize: '18px' }} />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Upload file" arrow>
+                <IconButton
+                  size="small"
+                  onClick={() => setShowUpload(!showUpload)}
+                  sx={{
+                    '&:hover': {
+                      backgroundColor: 'action.hover',
+                    },
+                    color: showUpload ? 'primary.main' : 'inherit',
+                  }}
+                >
+                  {showUpload ? <ExpandLess sx={{ fontSize: '18px' }} /> : <CloudUpload sx={{ fontSize: '18px' }} />}
+                </IconButton>
+              </Tooltip>
+            </>
+          )}
         </Box>
       </Box>
       
-      <Collapse in={showUpload}>
-        <Box sx={{ mb: 2 }}>
-          <FileUpload 
-            onUploadSuccess={handleUploadSuccess}
-            onClose={() => setShowUpload(false)}
-            targetFolder={selectedFolder}
-          />
-        </Box>
-      </Collapse>
+      {isBackendAvailable && (
+        <Collapse in={showUpload}>
+          <Box sx={{ mb: 2 }}>
+            <FileUpload 
+              onUploadSuccess={handleUploadSuccess}
+              onClose={() => setShowUpload(false)}
+              targetFolder={selectedFolder}
+            />
+          </Box>
+        </Collapse>
+      )}
       <SimpleTreeView
         slots={{
           collapseIcon: ExpandMore,
