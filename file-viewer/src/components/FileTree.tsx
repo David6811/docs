@@ -162,7 +162,7 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
       borderRadius: 1,
       border: '1px solid',
       borderColor: 'divider',
-      backgroundColor: '#fafbfc',
+      backgroundColor: 'background.paper',
       boxShadow: isMobile ? '0 4px 20px rgba(0,0,0,0.15)' : 'none',
     }}>
       <Typography 
@@ -177,7 +177,7 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
           gap: 0.5,
         }}
       >
-        📁 Documents
+        Documents
       </Typography>
       <SimpleTreeView
         slots={{
