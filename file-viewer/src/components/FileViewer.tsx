@@ -92,13 +92,21 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
           ? `http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`
           : `${process.env.PUBLIC_URL}/files/${filePath}`;
         return (
-          <Box sx={{ height: '100%', width: '100%' }}>
-            <iframe
-              src={htmlSrc}
-              style={{ width: '100%', height: '100%', border: 'none' }}
-              title="HTML Content"
-            />
-          </Box>
+          <iframe
+            src={htmlSrc}
+            style={{ 
+              width: '100%', 
+              height: '100%', 
+              border: 'none',
+              display: 'block',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }}
+            title="HTML Content"
+          />
         );
 
       case 'image':
@@ -107,7 +115,19 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
           ? `http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`
           : `${process.env.PUBLIC_URL}/files/${filePath}`;
         return (
-          <Box display="flex" justifyContent="center" alignItems="center" sx={{ p: 2 }}>
+          <Box 
+            display="flex" 
+            justifyContent="center" 
+            alignItems="center" 
+            sx={{ 
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              p: 1, // Minimal padding for images
+            }}
+          >
             <img
               src={imageSrc}
               alt="File content"
@@ -122,13 +142,21 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
           ? `http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`
           : `${process.env.PUBLIC_URL}/files/${filePath}`;
         return (
-          <Box sx={{ height: '100%', width: '100%' }}>
-            <iframe
-              src={pdfSrc}
-              style={{ width: '100%', height: '100%', border: 'none' }}
-              title="PDF Content"
-            />
-          </Box>
+          <iframe
+            src={pdfSrc}
+            style={{ 
+              width: '100%', 
+              height: '100%', 
+              border: 'none',
+              display: 'block',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }}
+            title="PDF Content"
+          />
         );
 
       case 'text':
@@ -138,19 +166,40 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
           // In production, show text files in iframe
           const textSrc = `${process.env.PUBLIC_URL}/files/${filePath}`;
           return (
-            <Box sx={{ height: '100%', width: '100%' }}>
-              <iframe
-                src={textSrc}
-                style={{ width: '100%', height: '100%', border: 'none' }}
-                title="Text Content"
-              />
-            </Box>
+            <iframe
+              src={textSrc}
+              style={{ 
+                width: '100%', 
+                height: '100%', 
+                border: 'none',
+                display: 'block',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+              }}
+              title="Text Content"
+            />
           );
         }
         
         return (
-          <Box sx={{ p: 2 }}>
-            <pre style={{ whiteSpace: 'pre-wrap', fontSize: '14px' }}>
+          <Box sx={{ 
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            p: 1, // Minimal padding
+            overflow: 'auto',
+          }}>
+            <pre style={{ 
+              whiteSpace: 'pre-wrap', 
+              fontSize: '14px',
+              margin: 0,
+              fontFamily: 'Monaco, Consolas, "Courier New", monospace',
+            }}>
               {content}
             </pre>
           </Box>
@@ -195,6 +244,7 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
         borderRadius: 1,
         border: '1px solid',
         borderColor: 'divider',
+        overflow: 'hidden', // Prevent content overflow
       }}
     >
       {filePath && (
@@ -243,8 +293,9 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
       )}
       <Box sx={{ 
         flex: 1, 
-        overflow: 'auto',
+        overflow: 'hidden', // Change to hidden to let iframe fill completely
         backgroundColor: filePath ? 'background.paper' : 'background.default',
+        position: 'relative',
       }}>
         {renderContent()}
       </Box>
