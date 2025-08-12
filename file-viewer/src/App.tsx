@@ -17,7 +17,6 @@ import {
   MenuOpen, 
   LightMode, 
   DarkMode,
-  AccountCircle,
 } from '@mui/icons-material';
 import FileTree from './components/FileTree';
 import FileViewer from './components/FileViewer';
@@ -219,30 +218,9 @@ function App() {
               {sidebarOpen ? <MenuOpen /> : <Menu />}
             </IconButton>
             
-            <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Typography variant="h6" component="div" sx={{ fontWeight: 700 }}>
-                Documents
-              </Typography>
-              
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <AccountCircle sx={{ fontSize: 20 }} />
-                <Chip
-                  label="Welcome, Wei Xu"
-                  variant="outlined"
-                  size="small"
-                  sx={{
-                    color: 'inherit',
-                    borderColor: 'rgba(255,255,255,0.3)',
-                    backgroundColor: 'rgba(255,255,255,0.1)',
-                    backdropFilter: 'blur(10px)',
-                    '& .MuiChip-label': {
-                      fontSize: '0.75rem',
-                      fontWeight: 500,
-                    },
-                  }}
-                />
-              </Box>
-            </Box>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 700 }}>
+              Documents
+            </Typography>
 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <LightMode sx={{ fontSize: 18, opacity: isDarkMode ? 0.5 : 1 }} />
