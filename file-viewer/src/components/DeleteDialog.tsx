@@ -156,7 +156,6 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
           throw new Error(errorData.error || 'Move failed');
         }
 
-        const result = await response.json();
         // Show success message briefly
         setError('');
         // Notify parent component of successful move

@@ -42,6 +42,7 @@ const CreateFolderDialog: React.FC<CreateFolderDialogProps> = ({
     }
 
     // Basic validation for folder name
+    // eslint-disable-next-line no-useless-escape
     if (!/^[a-zA-Z0-9\-_\s\.]+$/.test(trimmedName)) {
       setError('Folder name can only contain letters, numbers, spaces, hyphens, underscores, and dots');
       return;

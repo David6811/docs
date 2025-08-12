@@ -1,7 +1,29 @@
 [
   {
-    "name": "ANDROID_LIFECYCLE.html",
-    "path": "ANDROID_LIFECYCLE.html",
+    "name": "android",
+    "path": "android",
+    "isDirectory": true,
+    "children": [
+      {
+        "name": "ANDROID_LIFECYCLE.html",
+        "path": "android/ANDROID_LIFECYCLE.html",
+        "isDirectory": false
+      },
+      {
+        "name": "navigation_dots_bigger.png",
+        "path": "android/navigation_dots_bigger.png",
+        "isDirectory": false
+      },
+      {
+        "name": "navigation_dots_final.png",
+        "path": "android/navigation_dots_final.png",
+        "isDirectory": false
+      }
+    ]
+  },
+  {
+    "name": "test-upload.html",
+    "path": "test-upload.html",
     "isDirectory": false
   }
 ]
