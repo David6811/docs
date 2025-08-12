@@ -30,19 +30,24 @@ export const getFileType = (filename: string): FileType => {
 
 export const buildFileTree = async (basePath: string): Promise<FileNode[]> => {
   try {
-    // Try to fetch from static files first (for GitHub Pages)
-    const staticResponse = await fetch(`${process.env.PUBLIC_URL}/api/files.json`);
-    if (staticResponse.ok) {
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    
+    if (isLocalhost) {
+      // Local development - use API
+      const response = await fetch('http://localhost:3001/api/files');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } else {
+      // Production - use static files
+      const staticResponse = await fetch(`${process.env.PUBLIC_URL}/api/files.json`);
+      if (!staticResponse.ok) {
+        throw new Error(`HTTP error! status: ${staticResponse.status}`);
+      }
       const data = await staticResponse.json();
       return data;
     }
-    
-    // Fallback to local development API
-    const response = await fetch('http://localhost:3001/api/files');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json();
   } catch (error) {
     console.error('Error fetching file tree:', error);
     // Fallback to mock data if API is not available

@@ -87,7 +87,8 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
 
     switch (fileType) {
       case 'html':
-        const htmlSrc = process.env.NODE_ENV === 'development' 
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const htmlSrc = isLocalhost
           ? `http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`
           : `${process.env.PUBLIC_URL}/files/${filePath}`;
         return (
@@ -101,7 +102,8 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
         );
 
       case 'image':
-        const imageSrc = process.env.NODE_ENV === 'development' 
+        const isLocalhostImg = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const imageSrc = isLocalhostImg
           ? `http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`
           : `${process.env.PUBLIC_URL}/files/${filePath}`;
         return (
@@ -115,7 +117,8 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
         );
 
       case 'pdf':
-        const pdfSrc = process.env.NODE_ENV === 'development' 
+        const isLocalhostPdf = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const pdfSrc = isLocalhostPdf
           ? `http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`
           : `${process.env.PUBLIC_URL}/files/${filePath}`;
         return (
@@ -129,12 +132,11 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
         );
 
       case 'text':
-        const textSrc = process.env.NODE_ENV === 'development' 
-          ? content
-          : `${process.env.PUBLIC_URL}/files/${filePath}`;
+        const isLocalhostText = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
         
-        if (process.env.NODE_ENV !== 'development') {
+        if (!isLocalhostText) {
           // In production, show text files in iframe
+          const textSrc = `${process.env.PUBLIC_URL}/files/${filePath}`;
           return (
             <Box sx={{ height: '100%', width: '100%' }}>
               <iframe
@@ -165,7 +167,8 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
 
   const handleOpenInNewWindow = () => {
     if (filePath) {
-      const url = process.env.NODE_ENV === 'development'
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const url = isLocalhost
         ? `http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`
         : `${process.env.PUBLIC_URL}/files/${filePath}`;
       window.open(url, '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');

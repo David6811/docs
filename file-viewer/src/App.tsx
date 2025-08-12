@@ -68,40 +68,47 @@ function App() {
     setSidebarOpen(!sidebarOpen);
   };
 
-  // Auto-select HTML file on load in production
+  // Auto-select HTML file on load
   useEffect(() => {
-    if (process.env.NODE_ENV !== 'development') {
-      // Look for HTML files in the static data
-      const findHtmlFile = async () => {
-        try {
+    const findHtmlFile = async () => {
+      try {
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        let files;
+        
+        if (isLocalhost) {
+          // Local development - use API
+          const response = await fetch('http://localhost:3001/api/files');
+          files = await response.json();
+        } else {
+          // Production - use static files
           const response = await fetch(`${process.env.PUBLIC_URL}/api/files.json`);
-          const files = await response.json();
-          
-          // Find the first HTML file
-          const findHtml = (items: any[]): any => {
-            for (const item of items) {
-              if (item.isDirectory && item.children) {
-                const found = findHtml(item.children);
-                if (found) return found;
-              } else if (item.name.toLowerCase().endsWith('.html')) {
-                return item;
-              }
-            }
-            return null;
-          };
-          
-          const htmlFile = findHtml(files);
-          if (htmlFile) {
-            setSelectedFile(htmlFile.path);
-            setSelectedFileType('html' as FileType);
-          }
-        } catch (error) {
-          console.error('Error finding HTML file:', error);
+          files = await response.json();
         }
-      };
-      
-      findHtmlFile();
-    }
+        
+        // Find the first HTML file
+        const findHtml = (items: any[]): any => {
+          for (const item of items) {
+            if (item.isDirectory && item.children) {
+              const found = findHtml(item.children);
+              if (found) return found;
+            } else if (item.name.toLowerCase().endsWith('.html')) {
+              return item;
+            }
+          }
+          return null;
+        };
+        
+        const htmlFile = findHtml(files);
+        if (htmlFile) {
+          setSelectedFile(htmlFile.path);
+          setSelectedFileType('html' as FileType);
+        }
+      } catch (error) {
+        console.error('Error finding HTML file:', error);
+      }
+    };
+    
+    findHtmlFile();
   }, []);
 
   return (
