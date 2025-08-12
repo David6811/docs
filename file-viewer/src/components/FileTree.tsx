@@ -128,16 +128,23 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
             backgroundColor: selectedFile === node.path ? 'rgba(25, 118, 210, 0.1)' : 'transparent',
             borderRadius: 0.5,
             margin: '1px 0',
-            padding: '2px 4px',
+            padding: isMobile ? '4px 6px' : '2px 4px',
+            minHeight: isMobile ? '44px' : '32px', // Touch-friendly height on mobile
             '&:hover': {
               backgroundColor: selectedFile === node.path 
                 ? 'rgba(25, 118, 210, 0.15)' 
                 : 'rgba(0, 0, 0, 0.05)',
+            },
+            // Touch feedback on mobile
+            '@media (max-width: 768px)': {
+              '&:active': {
+                backgroundColor: 'rgba(25, 118, 210, 0.2)',
+              },
             }
           },
           '& .MuiTreeItem-label': {
-            padding: '2px 4px',
-            fontSize: '0.8rem',
+            padding: isMobile ? '4px 6px' : '2px 4px',
+            fontSize: isMobile ? '0.85rem' : '0.8rem',
           }
         }}
       >
@@ -146,14 +153,17 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
     ));
   };
 
+  const isMobile = window.innerWidth <= 768;
+  
   return (
     <Paper elevation={0} sx={{ 
       height: '100%', 
-      p: 1.5, 
+      p: isMobile ? 1 : 1.5, 
       borderRadius: 1,
       border: '1px solid',
       borderColor: 'divider',
       backgroundColor: '#fafbfc',
+      boxShadow: isMobile ? '0 4px 20px rgba(0,0,0,0.15)' : 'none',
     }}>
       <Typography 
         variant="subtitle1" 

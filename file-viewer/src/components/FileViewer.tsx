@@ -199,14 +199,14 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
     >
       {filePath && (
         <Box sx={{ 
-          p: 1.5, 
+          p: window.innerWidth <= 768 ? 1 : 1.5, 
           borderBottom: 1, 
           borderColor: 'divider',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           backgroundColor: '#f8f9fa',
-          minHeight: '56px',
+          minHeight: window.innerWidth <= 768 ? '48px' : '56px',
         }}>
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.25, fontSize: '0.95rem' }}>
