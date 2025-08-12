@@ -192,23 +192,24 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
         height: '100%', 
         display: 'flex', 
         flexDirection: 'column',
-        borderRadius: 2,
+        borderRadius: 1,
         border: '1px solid',
         borderColor: 'divider',
       }}
     >
       {filePath && (
         <Box sx={{ 
-          p: 2.5, 
+          p: 1.5, 
           borderBottom: 1, 
           borderColor: 'divider',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          backgroundColor: 'rgba(0, 0, 0, 0.02)',
+          backgroundColor: '#f8f9fa',
+          minHeight: '56px',
         }}>
-          <Box>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
+          <Box sx={{ minWidth: 0, flex: 1 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.25, fontSize: '0.95rem' }}>
               {filePath.split('/').pop()}
             </Typography>
             <Box display="flex" alignItems="center" gap={1}>
@@ -218,10 +219,10 @@ const FileViewer: React.FC<FileViewerProps> = ({ filePath, fileType }) => {
                   size="small"
                   color={getFileTypeColor(fileType)}
                   variant="outlined"
-                  sx={{ fontSize: '0.75rem' }}
+                  sx={{ fontSize: '0.7rem', height: '20px' }}
                 />
               )}
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
                 {filePath}
               </Typography>
             </Box>

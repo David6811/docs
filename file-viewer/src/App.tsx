@@ -19,35 +19,55 @@ const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#1565c0',
+      main: '#2563eb',
     },
     secondary: {
-      main: '#f50057',
+      main: '#0ea5e9',
     },
     background: {
-      default: '#f8f9fa',
+      default: '#f1f5f9',
       paper: '#ffffff',
+    },
+    grey: {
+      50: '#f8fafc',
+      100: '#f1f5f9',
+      200: '#e2e8f0',
     },
   },
   typography: {
-    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Inter", "SF Pro Display", "Roboto", "Helvetica", "Arial", sans-serif',
     h6: {
       fontWeight: 600,
+      fontSize: '1.1rem',
+    },
+    subtitle1: {
+      fontWeight: 500,
+    },
+    body2: {
+      fontSize: '0.875rem',
     },
   },
   components: {
     MuiAppBar: {
       styleOverrides: {
         root: {
-          boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
+          backgroundColor: '#1e40af',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
         },
       },
     },
     MuiPaper: {
       styleOverrides: {
         root: {
-          borderRadius: 8,
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          borderRadius: 6,
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 6,
         },
       },
     },
@@ -132,10 +152,10 @@ function App() {
           </Toolbar>
         </AppBar>
         
-        <Box sx={{ flexGrow: 1, p: 3, display: 'flex', gap: 3, height: 'calc(100vh - 64px)' }}>
+        <Box sx={{ flexGrow: 1, p: 1, display: 'flex', gap: 1, height: 'calc(100vh - 64px)' }}>
           {sidebarOpen && (
             <Box sx={{ 
-              flex: '0 0 350px', 
+              flex: '0 0 320px', 
               height: '100%',
               transition: 'all 0.3s ease-in-out',
             }}>
@@ -143,7 +163,7 @@ function App() {
             </Box>
           )}
           {sidebarOpen && (
-            <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+            <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
           )}
           <Box sx={{ 
             flex: 1, 

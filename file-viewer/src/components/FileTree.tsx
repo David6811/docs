@@ -81,15 +81,20 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
         key={node.path}
         itemId={node.path}
         label={
-          <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" pr={1}>
-            <Box display="flex" alignItems="center" gap={1} flex={1}>
-              {getFileIcon(node.name, node.isDirectory)}
+          <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" pr={0.5}>
+            <Box display="flex" alignItems="center" gap={0.75} flex={1} minWidth={0}>
+              <Box sx={{ fontSize: '16px', minWidth: '16px' }}>
+                {getFileIcon(node.name, node.isDirectory)}
+              </Box>
               <Typography 
                 variant="body2" 
                 sx={{ 
-                  fontSize: '0.875rem',
+                  fontSize: '0.8rem',
                   fontWeight: selectedFile === node.path ? 600 : 400,
                   color: selectedFile === node.path ? 'primary.main' : 'text.primary',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {node.name}
@@ -101,15 +106,17 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
                   size="small"
                   onClick={(event) => handleOpenInNewWindow(event, node.path)}
                   sx={{
-                    opacity: 0.7,
+                    opacity: 0.6,
                     '&:hover': {
                       opacity: 1,
                       backgroundColor: 'action.hover',
                     },
-                    padding: '4px',
+                    padding: '2px',
+                    minWidth: '20px',
+                    height: '20px',
                   }}
                 >
-                  <OpenInNew fontSize="small" />
+                  <OpenInNew sx={{ fontSize: '14px' }} />
                 </IconButton>
               </Tooltip>
             )}
@@ -118,17 +125,19 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
         onClick={() => handleFileSelect(node.path, node.name, node.isDirectory)}
         sx={{
           '& .MuiTreeItem-content': {
-            backgroundColor: selectedFile === node.path ? 'rgba(25, 118, 210, 0.08)' : 'transparent',
-            borderRadius: 1,
-            margin: '2px 0',
+            backgroundColor: selectedFile === node.path ? 'rgba(25, 118, 210, 0.1)' : 'transparent',
+            borderRadius: 0.5,
+            margin: '1px 0',
+            padding: '2px 4px',
             '&:hover': {
               backgroundColor: selectedFile === node.path 
-                ? 'rgba(25, 118, 210, 0.12)' 
-                : 'rgba(0, 0, 0, 0.04)',
+                ? 'rgba(25, 118, 210, 0.15)' 
+                : 'rgba(0, 0, 0, 0.05)',
             }
           },
           '& .MuiTreeItem-label': {
-            padding: '4px 8px',
+            padding: '2px 4px',
+            fontSize: '0.8rem',
           }
         }}
       >
@@ -140,18 +149,22 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
   return (
     <Paper elevation={0} sx={{ 
       height: '100%', 
-      p: 2, 
-      borderRadius: 2,
+      p: 1.5, 
+      borderRadius: 1,
       border: '1px solid',
       borderColor: 'divider',
+      backgroundColor: '#fafbfc',
     }}>
       <Typography 
-        variant="h6" 
+        variant="subtitle1" 
         sx={{ 
-          mb: 3, 
+          mb: 1.5, 
           color: 'text.primary',
           fontWeight: 600,
-          fontSize: '1.1rem',
+          fontSize: '0.95rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 0.5,
         }}
       >
         📁 Documents
@@ -166,7 +179,9 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
           overflowY: 'auto',
           '& .MuiTreeItem-root': {
             '& .MuiTreeItem-content': {
-              paddingLeft: 1,
+              paddingLeft: 0.5,
+              paddingY: 0.25,
+              minHeight: '32px',
             }
           }
         }}
