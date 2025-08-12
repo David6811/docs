@@ -21,10 +21,11 @@ async function scanDirectory(dirPath, relativePath = '') {
     const entries = await fs.promises.readdir(dirPath, { withFileTypes: true });
     
     for (const entry of entries) {
-      // Skip hidden files, git directory, file-viewer directory and CLAUDE.md
+      // Skip hidden files, git directory, file-viewer directory, CLAUDE.md and generate-static-data.js
       if (entry.name.startsWith('.') || 
           (entry.name === 'file-viewer' && relativePath === '') ||
-          (entry.name === 'CLAUDE.md' && relativePath === '')) continue;
+          (entry.name === 'CLAUDE.md' && relativePath === '') ||
+          entry.name === 'generate-static-data.js') continue;
       
       const fullPath = path.join(dirPath, entry.name);
       const relativeFullPath = path.join(relativePath, entry.name);

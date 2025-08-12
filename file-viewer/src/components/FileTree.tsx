@@ -7,6 +7,7 @@ import {
   Paper,
   IconButton,
   Tooltip,
+  Collapse,
 } from '@mui/material';
 import {
   ExpandMore,
@@ -17,9 +18,17 @@ import {
   Image,
   PictureAsPdf,
   OpenInNew,
+  Delete,
+  CloudUpload,
+  ExpandLess,
+  Refresh,
+  CreateNewFolder,
 } from '@mui/icons-material';
 import { FileNode, FileType } from '../types';
 import { getFileType, buildFileTree } from '../utils/fileUtils';
+import FileUpload from './FileUpload';
+import DeleteDialog from './DeleteDialog';
+import CreateFolderDialog from './CreateFolderDialog';
 
 interface FileTreeProps {
   onFileSelect: (filePath: string, fileType: FileType) => void;
@@ -28,17 +37,25 @@ interface FileTreeProps {
 const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
   const [fileTree, setFileTree] = useState<FileNode[]>([]);
   const [selectedFile, setSelectedFile] = useState<string>('');
+  const [selectedFolder, setSelectedFolder] = useState<string>(''); // Track selected folder for uploads
+  const [showUpload, setShowUpload] = useState<boolean>(false);
+  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; file: FileNode | null }>({ open: false, file: null });
+  const [createFolderDialog, setCreateFolderDialog] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const loadFileTree = async () => {
+    setLoading(true);
+    try {
+      const tree = await buildFileTree('/Users/weixu/docs');
+      setFileTree(tree);
+    } catch (error) {
+      console.error('Failed to load file tree:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadFileTree = async () => {
-      try {
-        const tree = await buildFileTree('/Users/weixu/docs');
-        setFileTree(tree);
-      } catch (error) {
-        console.error('Failed to load file tree:', error);
-      }
-    };
-
     loadFileTree();
   }, []);
 
@@ -59,8 +76,14 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
   };
 
   const handleFileSelect = (filePath: string, fileName: string, isDirectory: boolean) => {
-    if (!isDirectory) {
+    if (isDirectory) {
+      // If it's a directory, set it as the selected folder for uploads
+      setSelectedFolder(filePath);
+      setSelectedFile(''); // Clear file selection when folder is selected
+    } else {
+      // If it's a file, select it for viewing
       setSelectedFile(filePath);
+      setSelectedFolder(''); // Clear folder selection when file is selected
       const fileType = getFileType(fileName);
       onFileSelect(filePath, fileType);
     }
@@ -73,6 +96,81 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
       ? `http://localhost:3001/api/file-content?filepath=${encodeURIComponent(filePath)}`
       : `${process.env.PUBLIC_URL}/files/${filePath}`;
     window.open(url, '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+  };
+
+  const handleDeleteClick = (event: React.MouseEvent, file: FileNode) => {
+    event.stopPropagation();
+    setDeleteDialog({ open: true, file });
+  };
+
+  const handleDeleteConfirm = async (password: string) => {
+    if (!deleteDialog.file) return;
+
+    try {
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const apiUrl = isLocalhost ? 'http://localhost:3001/api/delete' : '/api/delete';
+      
+      const response = await fetch(apiUrl, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          filepath: deleteDialog.file.path,
+          password: password,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Delete failed');
+      }
+
+      // Refresh the file tree
+      await loadFileTree();
+      
+      // If the deleted file was selected, clear selection
+      if (selectedFile === deleteDialog.file.path) {
+        setSelectedFile('');
+        onFileSelect('', 'text');
+      }
+    } catch (error) {
+      throw error; // Re-throw to be handled by the dialog
+    }
+  };
+
+  const handleUploadSuccess = async () => {
+    setShowUpload(false);
+    await loadFileTree();
+  };
+
+  const handleCreateFolder = async (folderName: string) => {
+    try {
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const apiUrl = isLocalhost ? 'http://localhost:3001/api/create-folder' : '/api/create-folder';
+      
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          folderPath: folderName,
+          parentFolder: selectedFolder || '', // Create in selected folder or root
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create folder');
+      }
+
+      // Refresh the file tree
+      await loadFileTree();
+      
+    } catch (error) {
+      throw error; // Re-throw to be handled by the dialog
+    }
   };
 
   const renderTree = (nodes: FileNode[]): React.ReactElement[] => {
@@ -90,8 +188,8 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
                 variant="body2" 
                 sx={{ 
                   fontSize: '0.8rem',
-                  fontWeight: selectedFile === node.path ? 600 : 400,
-                  color: selectedFile === node.path ? 'primary.main' : 'text.primary',
+                  fontWeight: (selectedFile === node.path || selectedFolder === node.path) ? 600 : 400,
+                  color: (selectedFile === node.path || selectedFolder === node.path) ? 'primary.main' : 'text.primary',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
@@ -100,38 +198,61 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
                 {node.name}
               </Typography>
             </Box>
-            {!node.isDirectory && (
-              <Tooltip title="Open in new window" arrow>
+            <Box sx={{ display: 'flex', gap: 0.5 }}>
+              {!node.isDirectory && (
+                <Tooltip title="Open in new window" arrow>
+                  <IconButton
+                    size="small"
+                    onClick={(event) => handleOpenInNewWindow(event, node.path)}
+                    sx={{
+                      opacity: 0.6,
+                      '&:hover': {
+                        opacity: 1,
+                        backgroundColor: 'action.hover',
+                      },
+                      padding: '2px',
+                      minWidth: '20px',
+                      height: '20px',
+                    }}
+                  >
+                    <OpenInNew sx={{ fontSize: '14px' }} />
+                  </IconButton>
+                </Tooltip>
+              )}
+              <Tooltip title={node.isDirectory ? "Delete folder" : "Delete file"} arrow>
                 <IconButton
                   size="small"
-                  onClick={(event) => handleOpenInNewWindow(event, node.path)}
+                  onClick={(event) => handleDeleteClick(event, node)}
                   sx={{
                     opacity: 0.6,
                     '&:hover': {
                       opacity: 1,
-                      backgroundColor: 'action.hover',
+                      backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                      color: 'error.main',
                     },
                     padding: '2px',
                     minWidth: '20px',
                     height: '20px',
                   }}
                 >
-                  <OpenInNew sx={{ fontSize: '14px' }} />
+                  <Delete sx={{ fontSize: '14px' }} />
                 </IconButton>
               </Tooltip>
-            )}
+            </Box>
           </Box>
         }
         onClick={() => handleFileSelect(node.path, node.name, node.isDirectory)}
         sx={{
           '& .MuiTreeItem-content': {
-            backgroundColor: selectedFile === node.path ? 'rgba(25, 118, 210, 0.1)' : 'transparent',
+            backgroundColor: (selectedFile === node.path || selectedFolder === node.path) 
+              ? 'rgba(25, 118, 210, 0.1)' 
+              : 'transparent',
             borderRadius: 0.5,
             margin: '1px 0',
             padding: isMobile ? '4px 6px' : '2px 4px',
             minHeight: isMobile ? '44px' : '32px', // Touch-friendly height on mobile
             '&:hover': {
-              backgroundColor: selectedFile === node.path 
+              backgroundColor: (selectedFile === node.path || selectedFolder === node.path)
                 ? 'rgba(25, 118, 210, 0.15)' 
                 : 'rgba(0, 0, 0, 0.05)',
             },
@@ -165,20 +286,79 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
       backgroundColor: 'background.paper',
       boxShadow: isMobile ? '0 4px 20px rgba(0,0,0,0.15)' : 'none',
     }}>
-      <Typography 
-        variant="subtitle1" 
-        sx={{ 
-          mb: 1.5, 
-          color: 'text.primary',
-          fontWeight: 600,
-          fontSize: '0.95rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 0.5,
-        }}
-      >
-        Documents
-      </Typography>
+      <Box sx={{ 
+        mb: 1.5, 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-between' 
+      }}>
+        <Typography 
+          variant="subtitle1" 
+          sx={{ 
+            color: 'text.primary',
+            fontWeight: 600,
+            fontSize: '0.95rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 0.5,
+          }}
+        >
+          Documents
+        </Typography>
+        <Box sx={{ display: 'flex', gap: 0.5 }}>
+          <Tooltip title="Refresh" arrow>
+            <IconButton
+              size="small"
+              onClick={loadFileTree}
+              disabled={loading}
+              sx={{
+                '&:hover': {
+                  backgroundColor: 'action.hover',
+                },
+              }}
+            >
+              <Refresh sx={{ fontSize: '18px' }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Create folder" arrow>
+            <IconButton
+              size="small"
+              onClick={() => setCreateFolderDialog(true)}
+              sx={{
+                '&:hover': {
+                  backgroundColor: 'action.hover',
+                },
+              }}
+            >
+              <CreateNewFolder sx={{ fontSize: '18px' }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Upload file" arrow>
+            <IconButton
+              size="small"
+              onClick={() => setShowUpload(!showUpload)}
+              sx={{
+                '&:hover': {
+                  backgroundColor: 'action.hover',
+                },
+                color: showUpload ? 'primary.main' : 'inherit',
+              }}
+            >
+              {showUpload ? <ExpandLess sx={{ fontSize: '18px' }} /> : <CloudUpload sx={{ fontSize: '18px' }} />}
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Box>
+      
+      <Collapse in={showUpload}>
+        <Box sx={{ mb: 2 }}>
+          <FileUpload 
+            onUploadSuccess={handleUploadSuccess}
+            onClose={() => setShowUpload(false)}
+            targetFolder={selectedFolder}
+          />
+        </Box>
+      </Collapse>
       <SimpleTreeView
         slots={{
           collapseIcon: ExpandMore,
@@ -198,6 +378,23 @@ const FileTree: React.FC<FileTreeProps> = ({ onFileSelect }) => {
       >
         {renderTree(fileTree)}
       </SimpleTreeView>
+      
+      <DeleteDialog
+        open={deleteDialog.open}
+        onClose={() => setDeleteDialog({ open: false, file: null })}
+        onConfirm={handleDeleteConfirm}
+        onMoveSuccess={loadFileTree}
+        fileName={deleteDialog.file?.name || ''}
+        filePath={deleteDialog.file?.path || ''}
+        isDirectory={deleteDialog.file?.isDirectory || false}
+      />
+      
+      <CreateFolderDialog
+        open={createFolderDialog}
+        onClose={() => setCreateFolderDialog(false)}
+        onConfirm={handleCreateFolder}
+        parentFolder={selectedFolder}
+      />
     </Paper>
   );
 };
