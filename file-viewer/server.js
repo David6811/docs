@@ -23,8 +23,8 @@ async function scanDirectory(dirPath, relativePath = '') {
       // Skip hidden files and git directory  
       if (entry.name.startsWith('.')) continue;
       
-      // Skip file-viewer directory and CLAUDE.md only in file tree listing
-      if ((entry.name === 'file-viewer' || entry.name === 'CLAUDE.md') && relativePath === '') continue;
+      // Skip file-viewer directory, CLAUDE.md, and generate-static-data.js only in file tree listing
+      if ((entry.name === 'file-viewer' || entry.name === 'CLAUDE.md' || entry.name === 'generate-static-data.js') && relativePath === '') continue;
       
       const fullPath = path.join(dirPath, entry.name);
       const relativeFullPath = path.join(relativePath, entry.name);
