@@ -79,7 +79,8 @@ MainActivity_Lifecycle: onStop
 MainActivity_Lifecycle: onRestart
 MainActivity_Lifecycle: onStart
 MainActivity_Lifecycle: onResume
-</code></pre><h3 id="a2-gesture-swipe-to-return-to-desktop">A2. Gesture Swipe to Return to Desktop </h3>
+</code></pre><p><img src="image.png" alt="alt text"></p>
+<h3 id="a2-gesture-swipe-to-return-to-desktop">A2. Gesture Swipe to Return to Desktop </h3>
 <p><strong>User Operation</strong>: Bottom short swipe to return to desktop</p>
 <pre data-role="codeBlock" data-info="" class="language-text"><code>Lifecycle Sequence: onPause → onStop
 App State: Enter background, remain in memory
@@ -103,7 +104,8 @@ MainActivity_Lifecycle: onStop
 MainActivity_Lifecycle: onRestart
 MainActivity_Lifecycle: onStart
 MainActivity_Lifecycle: onResume
-</code></pre><h2 id="b-app-switching-operations">B. App Switching Operations </h2>
+</code></pre><p><img src="image-1.png" alt="alt text"></p>
+<h2 id="b-app-switching-operations">B. App Switching Operations </h2>
 <h3 id="b1-open-other-apps">B1. Open Other Apps </h3>
 <p><strong>User Operation</strong>: Tap other app icons on desktop</p>
 <pre data-role="codeBlock" data-info="" class="language-text"><code>Lifecycle Sequence: onPause → onStop
@@ -128,7 +130,8 @@ MainActivity_Lifecycle: onStop
 MainActivity_Lifecycle: onRestart
 MainActivity_Lifecycle: onStart
 MainActivity_Lifecycle: onResume
-</code></pre><h3 id="b2-task-manager-app-switch">B2. Task Manager App Switch </h3>
+</code></pre><p><img src="image-2.png" alt="alt text"></p>
+<h3 id="b2-task-manager-app-switch">B2. Task Manager App Switch </h3>
 <p><strong>User Operation</strong>: Tap app card in task manager</p>
 <pre data-role="codeBlock" data-info="" class="language-text"><code>Lifecycle Sequence: onRestart → onStart → onResume
 App State: Resume from background to foreground
@@ -146,7 +149,8 @@ Startup Type: Hot start
 MainActivity_Lifecycle: onRestart
 MainActivity_Lifecycle: onStart
 MainActivity_Lifecycle: onResume
-</code></pre><h3 id="b3-notification-tap-navigation">B3. Notification Tap Navigation </h3>
+</code></pre><p><img src="image-3.png" alt="alt text"></p>
+<h3 id="b3-notification-tap-navigation">B3. Notification Tap Navigation </h3>
 <p><strong>User Operation</strong>: Tap app notification in notification panel</p>
 <pre data-role="codeBlock" data-info="" class="language-text"><code>Lifecycle Sequence: 
 - If app in background: onRestart → onStart → onResume
@@ -162,14 +166,16 @@ Startup Type: Depends on current app state
     style A fill:#FFB6C1
     style F fill:#90EE90
 </div><p><strong>Log Output Examples</strong>:</p>
-<pre data-role="codeBlock" data-info="" class="language-text"><code># App in background scenario
+<pre data-role="codeBlock" data-info="" class="language-text"><code># App in background scenario (Press Home and return soon to avoid Activity being killed.)
 MainActivity_Lifecycle: onRestart
 MainActivity_Lifecycle: onStart
 MainActivity_Lifecycle: onResume
 
 # App closed scenario
 SplashActivity_Lifecycle: onCreate - Start Type: Cold Start
-</code></pre><h3 id="b4-share-function-navigation">B4. Share Function Navigation </h3>
+</code></pre><p><img src="image-6.png" alt="alt text"><br>
+<img src="image-5.png" alt="alt text"></p>
+<h3 id="b4-share-function-navigation">B4. Share Function Navigation </h3>
 <p><strong>User Operation</strong>: Other apps share content to current app</p>
 <pre data-role="codeBlock" data-info="" class="language-text"><code>Lifecycle Sequence: 
 - If app in background: onRestart → onStart → onResume
@@ -189,7 +195,8 @@ Startup Type: Depends on current app state
 ShareActivity_Lifecycle: onCreate
 ShareActivity_Lifecycle: onStart
 ShareActivity_Lifecycle: onResume
-</code></pre><h2 id="c-app-termination-operations">C. App Termination Operations </h2>
+</code></pre><p>(Debug image unavailable – ShareActivity not yet implemented)</p>
+<h2 id="c-app-termination-operations">C. App Termination Operations </h2>
 <h3 id="c1-task-manager-swipe-up-close">C1. Task Manager Swipe Up Close </h3>
 <p><strong>User Operation</strong>: Swipe up app card in task manager</p>
 <pre data-role="codeBlock" data-info="" class="language-text"><code>Lifecycle Sequence: onPause → onStop → onDestroy
@@ -216,7 +223,8 @@ SplashActivity_Lifecycle: onCreate - Start Type: Cold Start
 MainActivity_Lifecycle: onCreate
 MainActivity_Lifecycle: onStart
 MainActivity_Lifecycle: onResume
-</code></pre><h3 id="c2-task-card-swipe-leftright-close">C2. Task Card Swipe Left/Right Close </h3>
+</code></pre><p><img src="image-7.png" alt="alt text"></p>
+<h3 id="c2-task-card-swipe-leftright-close">C2. Task Card Swipe Left/Right Close </h3>
 <p><strong>User Operation</strong>: Swipe left/right app card in task manager</p>
 <pre data-role="codeBlock" data-info="" class="language-text"><code>Lifecycle Sequence: Immediate onDestroy
 App State: App immediately terminated
@@ -240,7 +248,8 @@ SplashActivity_Lifecycle: onCreate - Start Type: Cold Start
 MainActivity_Lifecycle: onCreate
 MainActivity_Lifecycle: onStart
 MainActivity_Lifecycle: onResume
-</code></pre><h3 id="c3-force-stop-in-settings">C3. Force Stop in Settings </h3>
+</code></pre><p><img src="image-8.png" alt="alt text"></p>
+<h3 id="c3-force-stop-in-settings">C3. Force Stop in Settings </h3>
 <p><strong>User Operation</strong>: Settings → App Management → Force Stop</p>
 <pre data-role="codeBlock" data-info="" class="language-text"><code>Lifecycle Sequence: Immediate onDestroy (may skip other lifecycle methods)
 App State: App force terminated
@@ -249,7 +258,7 @@ Characteristics: Most thorough close method, cleans all background tasks
 Startup Type: Next startup will be cold start
 </code></pre><p><strong>Lifecycle Flow Diagram</strong>:</p>
 <div class="mermaid">graph LR
-    A[Activity running] --&gt; B[Settings force stop] --&gt; C[onDestroy] --&gt; D[Force terminate]
+    A[Activity running] --&gt; B[Settings force stop] --&gt; C[Process killed immediately] --&gt; D[Force terminate]
     D --&gt; E[Restart] --&gt; F[onCreate] --&gt; G[onStart] --&gt; H[onResume] --&gt; I[Activity running]
     
     style A fill:#90EE90
@@ -257,14 +266,15 @@ Startup Type: Next startup will be cold start
     style I fill:#90EE90
 </div><p><strong>Log Output Examples</strong>:</p>
 <pre data-role="codeBlock" data-info="" class="language-text"><code># Force stop
-MainActivity_Lifecycle: onDestroy
+MainActivity_Lifecycle: (no lifecycle logs – process killed directly)
 
 # Restart (Cold start)
 SplashActivity_Lifecycle: onCreate - Start Type: Cold Start
 MainActivity_Lifecycle: onCreate
 MainActivity_Lifecycle: onStart
 MainActivity_Lifecycle: onResume
-</code></pre><h2 id="d-page-navigation-operations">D. Page Navigation Operations </h2>
+</code></pre><p><img src="image-9.png" alt="alt text"></p>
+<h2 id="d-page-navigation-operations">D. Page Navigation Operations </h2>
 <h3 id="d1-in-app-back-button-exit">D1. In-App Back Button Exit </h3>
 <p><strong>User Operation</strong>: Press Back button in app's root Activity</p>
 <pre data-role="codeBlock" data-info="" class="language-text"><code>Lifecycle Sequence: onPause → onStop → onDestroy
@@ -291,7 +301,8 @@ SplashActivity_Lifecycle: onCreate - Start Type: Cold Start
 MainActivity_Lifecycle: onCreate
 MainActivity_Lifecycle: onStart
 MainActivity_Lifecycle: onResume
-</code></pre><h3 id="d2-in-app-return-to-previous-page">D2. In-App Return to Previous Page </h3>
+</code></pre><p><img src="image-10.png" alt="alt text"></p>
+<h3 id="d2-in-app-return-to-previous-page">D2. In-App Return to Previous Page </h3>
 <p><strong>User Operation</strong>: Press Back button in app's non-root Activity</p>
 <pre data-role="codeBlock" data-info="" class="language-text"><code>Lifecycle Sequence: 
 - Current Activity: onPause → onStop → onDestroy
@@ -314,7 +325,9 @@ SecondActivity_Lifecycle: onStop
 MainActivity_Lifecycle: onStart
 SecondActivity_Lifecycle: onDestroy
 MainActivity_Lifecycle: onResume
-</code></pre><h3 id="d3-gesture-back-exit-app">D3. Gesture Back Exit App </h3>
+</code></pre><p><img src="image-11.png" alt="alt text"><br>
+<img src="image-12.png" alt="alt text"></p>
+<h3 id="d3-gesture-back-exit-app">D3. Gesture Back Exit App </h3>
 <p><strong>User Operation</strong>: Swipe from screen edge to return, exit app in root Activity</p>
 <pre data-role="codeBlock" data-info="" class="language-text"><code>Lifecycle Sequence: onPause → onStop → onDestroy
 App State: App exits
@@ -340,15 +353,17 @@ SplashActivity_Lifecycle: onCreate - Start Type: Cold Start
 MainActivity_Lifecycle: onCreate
 MainActivity_Lifecycle: onStart
 MainActivity_Lifecycle: onResume
-</code></pre><h2 id="e-system-function-operations">E. System Function Operations </h2>
+</code></pre><p><img src="image-13.png" alt="alt text"></p>
+<h2 id="e-system-function-operations">E. System Function Operations </h2>
 <h3 id="e1-pull-down-notification-panel">E1. Pull Down Notification Panel </h3>
 <p><strong>User Operation</strong>: Pull down from top to open notification panel</p>
 <pre data-role="codeBlock" data-info="" class="language-text"><code>Lifecycle Sequence: onPause (app partially obscured)
 App State: App paused but still partially visible
 Process State: Process continues running
 Characteristics: Lightweight pause, quick recovery
-Startup Type: Immediate onResume when panel collapsed
-</code></pre><p><strong>Lifecycle Flow Diagram</strong>:</p>
+Startup Type: Immediate onResume when panel collapsed工
+</code></pre><p><strong>App partially obscured</strong></p>
+<p><strong>Lifecycle Flow Diagram</strong>:</p>
 <div class="mermaid">graph LR
     A[Activity running] --&gt; B[Pull notification] --&gt; C[onPause] --&gt; D[Panel open] --&gt; E[Collapse panel] --&gt; F[onResume] --&gt; G[Activity running]
     
@@ -388,7 +403,8 @@ MainActivity_Lifecycle: ========== State Restore ==========
 MainActivity_Lifecycle: onRestoreInstanceState - State restore complete
 MainActivity_Lifecycle: onStart
 MainActivity_Lifecycle: onResume
-</code></pre><h3 id="e3-enter-split-screen-mode">E3. Enter Split Screen Mode </h3>
+</code></pre><p><img src="image-14.png" alt="alt text"></p>
+<h3 id="e3-enter-split-screen-mode">E3. Enter Split Screen Mode </h3>
 <p><strong>User Operation</strong>: Long press Recent button or gesture to enter split screen</p>
 <pre data-role="codeBlock" data-info="" class="language-text"><code>Lifecycle Sequence: onPause → Configuration change → onSaveInstanceState → onStop → onDestroy → onCreate → onRestoreInstanceState → onStart → onResume
 App State: Activity recreated to adapt split screen layout
@@ -412,7 +428,8 @@ MainActivity_Lifecycle: onDestroy
 MainActivity_Lifecycle: onCreate - State Type: State Restore
 MainActivity_Lifecycle: onStart
 MainActivity_Lifecycle: onResume
-</code></pre><h3 id="e4-return-from-settings">E4. Return from Settings </h3>
+</code></pre><p><img src="image-15.png" alt="alt text"></p>
+<h3 id="e4-return-from-settings">E4. Return from Settings </h3>
 <p><strong>User Operation</strong>: Return to app from notification permission settings page</p>
 <pre data-role="codeBlock" data-info="" class="language-text"><code>Lifecycle Sequence: onRestart → onStart → onResume
 App State: Resume from background, may need to check permission state
@@ -431,7 +448,8 @@ MainActivity_Lifecycle: onRestart
 MainActivity_Lifecycle: onStart
 MainActivity_Lifecycle: onResume
 MainActivity_Lifecycle: onResume - Permissions granted
-</code></pre><h2 id="android-official-lifecycle-diagram-with-user-operation-mapping">Android Official Lifecycle Diagram with User Operation Mapping </h2>
+</code></pre><p><img src="image-16.png" alt="alt text"></p>
+<h2 id="android-official-lifecycle-diagram-with-user-operation-mapping">Android Official Lifecycle Diagram with User Operation Mapping </h2>
 <div class="mermaid">graph TD
     A[Activity launched] --&gt; B[onCreate]
     B --&gt; C[onStart]
@@ -593,99 +611,7 @@ MainActivity_Lifecycle: onResume - Permissions granted
     style E fill:#ffcdd2
     style F fill:#ffcdd2
     style G fill:#fff9c4
-</div><h2 id="key-research-findings">Key Research Findings </h2>
-<h3 id="hot-start-characteristics">Hot Start Characteristics </h3>
-<p><strong>Definition</strong>: Hot start occurs when an app resumes from background without process termination.</p>
-<p><strong>Observed Behaviors</strong>:</p>
-<ul>
-<li><strong>Process Continuity</strong>: Same Process ID (PID) maintained throughout lifecycle</li>
-<li><strong>Rapid Resume</strong>: Typical resume time &lt; 100ms</li>
-<li><strong>State Preservation</strong>: UI state and memory remain intact</li>
-<li><strong>Lifecycle Pattern</strong>: <code>onRestart() → onStart() → onResume()</code></li>
-<li><strong>Navigation Flow</strong>: Direct resume to previous screen, bypasses splash/intro</li>
-</ul>
-<h3 id="cold-start-characteristics">Cold Start Characteristics </h3>
-<p><strong>Definition</strong>: Cold start occurs when app launches fresh with new process creation.</p>
-<p><strong>Observed Behaviors</strong>:</p>
-<ul>
-<li><strong>Process Recreation</strong>: New Process ID assigned</li>
-<li><strong>Full Initialization</strong>: Complete app startup sequence required</li>
-<li><strong>Extended Launch Time</strong>: Typically &gt; 500ms for full flow</li>
-<li><strong>Lifecycle Pattern</strong>: <code>onCreate() → onStart() → onResume()</code></li>
-<li><strong>Navigation Flow</strong>: Complete flow execution (Splash → Intro/Main)</li>
-</ul>
-<h3 id="state-management-insights">State Management Insights </h3>
-<h4 id="persistent-state-survives-all-restart-types">Persistent State (Survives All Restart Types) </h4>
-<ul>
-<li><strong>SharedPreferences</strong>: Intro completion status, user preferences</li>
-<li><strong>External Storage</strong>: Application data, settings</li>
-<li><strong>System-Level Permissions</strong>: Granted permissions persist</li>
-</ul>
-<h4 id="transient-state-requires-explicit-management">Transient State (Requires Explicit Management) </h4>
-<ul>
-<li><strong>UI Component State</strong>: Scroll positions, form inputs</li>
-<li><strong>Memory Objects</strong>: In-memory caches, temporary data</li>
-<li><strong>Network Connections</strong>: Active connections terminated</li>
-</ul>
-<h2 id="architectural-recommendations">Architectural Recommendations </h2>
-<h3 id="1-splash-screen-optimization">1. Splash Screen Optimization </h3>
-<p><strong>Current Implementation</strong>:</p>
-<pre data-role="codeBlock" data-info="kotlin" class="language-kotlin kotlin"><code><span class="token function">installSplashScreen</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setKeepOnScreenCondition</span> <span class="token punctuation">{</span> <span class="token boolean">false</span> <span class="token punctuation">}</span>
-</code></pre><p><strong>Recommended Enhancement</strong>:</p>
-<pre data-role="codeBlock" data-info="kotlin" class="language-kotlin kotlin"><code><span class="token function">installSplashScreen</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setKeepOnScreenCondition</span> <span class="token punctuation">{</span> 
-    <span class="token comment">// Keep visible during heavy operations</span>
-    heavyInitializationInProgress 
-<span class="token punctuation">}</span>
-</code></pre><h3 id="2-state-preservation-strategy">2. State Preservation Strategy </h3>
-<p><strong>Critical Components to Save</strong>:</p>
-<ul>
-<li>User input data</li>
-<li>Navigation state</li>
-<li>Scroll positions</li>
-<li>Form completion status</li>
-</ul>
-<p><strong>Implementation Pattern</strong>:</p>
-<pre data-role="codeBlock" data-info="kotlin" class="language-kotlin kotlin"><code><span class="token keyword keyword-override">override</span> <span class="token keyword keyword-fun">fun</span> <span class="token function">onSaveInstanceState</span><span class="token punctuation">(</span>outState<span class="token operator">:</span> Bundle<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword keyword-super">super</span><span class="token punctuation">.</span><span class="token function">onSaveInstanceState</span><span class="token punctuation">(</span>outState<span class="token punctuation">)</span>
-    <span class="token comment">// Save critical UI state</span>
-    outState<span class="token punctuation">.</span><span class="token function">putParcelable</span><span class="token punctuation">(</span>KEY_UI_STATE<span class="token punctuation">,</span> currentUIState<span class="token punctuation">)</span>
-<span class="token punctuation">}</span>
-</code></pre><h3 id="3-intro-flow-optimization">3. Intro Flow Optimization </h3>
-<p><strong>Current Logic</strong>:</p>
-<pre data-role="codeBlock" data-info="kotlin" class="language-kotlin kotlin"><code><span class="token keyword keyword-val">val</span> isIntroCompleted <span class="token operator">=</span> <span class="token function">IntroPreferences</span><span class="token punctuation">(</span><span class="token keyword keyword-this">this</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isIntroCompleted</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token keyword keyword-val">val</span> targetActivity <span class="token operator">=</span> <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>isIntroCompleted<span class="token punctuation">)</span> MainActivity<span class="token operator">::</span><span class="token keyword keyword-class">class</span><span class="token punctuation">.</span>java <span class="token keyword keyword-else">else</span> IntroActivity<span class="token operator">::</span><span class="token keyword keyword-class">class</span><span class="token punctuation">.</span>java
-</code></pre><p><strong>Enhanced Logic</strong>:</p>
-<pre data-role="codeBlock" data-info="kotlin" class="language-kotlin kotlin"><code><span class="token keyword keyword-val">val</span> shouldSkipIntro <span class="token operator">=</span> isIntroCompleted <span class="token operator">||</span> isReturningUser <span class="token operator">||</span> isHotRestart
-</code></pre><h2 id="development-best-practices">Development Best Practices </h2>
-<h3 id="key-takeaways">Key Takeaways </h3>
-<ol>
-<li><strong>Always implement state saving</strong>: Never assume hot restart</li>
-<li><strong>Optimize cold start paths</strong>: Users notice &gt; 2 second delays</li>
-<li><strong>Handle permission edge cases</strong>: System settings returns</li>
-<li><strong>Test across all scenarios</strong>: Automated testing insufficient</li>
-</ol>
-<h3 id="real-world-implications">Real-World Implications </h3>
-<p><strong>Hot Start Benefits</strong>:</p>
-<ul>
-<li>Instantaneous app return</li>
-<li>Context preservation</li>
-<li>Reduced data usage</li>
-<li>Better battery efficiency</li>
-</ul>
-<p><strong>Cold Start Considerations</strong>:</p>
-<ul>
-<li>Fresh start reliability</li>
-<li>Memory leak prevention</li>
-<li>Updated resource loading</li>
-<li>Permission revalidation</li>
-</ul>
-<h2 id="conclusion">Conclusion </h2>
-<p>This research demonstrates the critical importance of understanding Android's lifecycle nuances. The distinction between hot and cold starts significantly impacts user experience, performance characteristics, and application reliability.</p>
-<p>Understanding these user operations and their corresponding lifecycle state changes is fundamental to creating responsive, reliable Android applications. Each operation type requires specific handling strategies to ensure optimal user experience across all scenarios.</p>
-<p>The complete source code, test scenarios, and detailed logs are available in the project repository, enabling reproduction and extension of this research.</p>
-<hr>
-<p><em>Research conducted using Android API levels 24-34, tested across multiple device configurations and system states. All code examples are production-ready and follow Android development best practices.</em></p>
-
+</div>
       </div>
       
       
